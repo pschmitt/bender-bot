@@ -8,7 +8,9 @@ from plugins.clear import clear
 from plugins.quote import quote
 from plugins.sms import sms
 from plugins.snap import snap
-from pprint import pprint
+from plugins.random_fact import random_fact
+from plugins.insult import insult
+from plugins.gimme import gimme
 from security import is_authorized
 import config
 import logging
@@ -51,7 +53,15 @@ if __name__ == '__main__':
     updater = telegram.Updater(token=config.get_token())
     bc.dispatcher = updater.dispatcher
 
-    PLUGINS = [clear, sms, snap, quote]
+    PLUGINS = [
+        clear,
+        gimme,
+        insult,
+        quote,
+        random_fact,
+        sms,
+        snap,
+    ]
 
     for p in PLUGINS:
         print(p)
