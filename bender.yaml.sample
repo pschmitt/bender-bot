@@ -1,0 +1,12 @@
+bot:
+    token: XXXX
+    authorized_users:
+        - XXXX
+camera:
+    host: XXX
+    port 88
+    username: XXX
+    password: XXX
+hue:
+    host: XXX
+    username: XXX

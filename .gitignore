@@ -1,0 +1,4 @@
+.ropeproject
+*.pyc
+bender*.yaml
+config
