@@ -1,0 +1,3 @@
+[submodule "plugins/snap/foscam_python_lib"]
+	path = plugins/snap/foscam_python_lib
+	url = https://github.com/quatanium/foscam-python-lib
