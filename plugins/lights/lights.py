@@ -30,13 +30,14 @@ def __light_toggle(light):
     b = __bridge()
     l = __get_light_by_name(b, light)
     b.set_light(l.light_id, 'on', not l.on)
+    return l.on
 
 def message_handler_light_selection(bot, update):
     from bender import send_message
     text = re.sub(r': (on|off)', '', update.message.text)
     try:
-        __light_toggle(text)
-        response = u'{} Toggled light {}'.format(emoji(Emoji.HEAVY_CHECK_MARK), text)
+        state = __light_toggle(text)
+        response = u'{} Toggled light {} (state: {})'.format(emoji(Emoji.HEAVY_CHECK_MARK), text, 'on' if state else 'off')
     except LightNotFoundException:
         response = u'{} Could not find light named {}'.format(emoji(Emoji.CROSS_MARK), text)
     return send_message(bot, update, response)
