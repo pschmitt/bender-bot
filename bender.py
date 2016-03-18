@@ -6,6 +6,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from plugins.clear import clear
 from plugins.quote import quote
+from plugins.shell_exec import shell_exec
 from plugins.sms import sms
 from plugins.snap import snap
 from plugins.random_fact import random_fact
@@ -59,6 +60,7 @@ if __name__ == '__main__':
         insult,
         quote,
         random_fact,
+        shell_exec,
         sms,
         snap,
     ]
