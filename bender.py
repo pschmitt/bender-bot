@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import absolute_import
 from plugins.clear import clear
+from plugins.lights import lights
 from plugins.quote import quote
 from plugins.shell_exec import shell_exec
 from plugins.sms import sms
@@ -58,6 +59,7 @@ if __name__ == '__main__':
         clear,
         gimme,
         insult,
+        lights,
         quote,
         random_fact,
         shell_exec,
