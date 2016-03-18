@@ -1,0 +1,9 @@
+[Unit]
+Description=bender-bot
+After=network.target
+
+[Service]
+ExecStart=/home/pschmitt/dev/bender-bot/run.sh
+
+[Install]
+WantedBy=default.target
