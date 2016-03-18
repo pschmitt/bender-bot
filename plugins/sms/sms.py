@@ -17,7 +17,6 @@ COMMANDS = ['sms']
 CONTACTS = get_config_section(section='contacts')
 DEFAULT_LOCATION = 'FR'
 
-MESSAGE_HANDLER = None
 RECIPIENT = None
 
 logger = logging.getLogger(__name__)
@@ -36,12 +35,9 @@ def __gammu_sms(recipient, text):
 
 @auth_required
 def msg_handler_content(bot, update):
-    global MESSAGE_HANDLER
     global RECIPIENT
     chat_id = update.message.chat_id
-    bot_controller.dispatcher.removeTelegramMessageHandler(msg_handler_content)
-    bot_controller.dispatcher.addTelegramMessageHandler(MESSAGE_HANDLER)
-    bot.sendMessage(chat_id=chat_id, text=__gammu_sms(RECIPIENT, update.message.text))
+    bot_controller.reset_message_handler()
     bot.sendMessage(
         chat_id=chat_id,
         text='{} Message sent!'.format(emoji(Emoji.HEAVY_CHECK_MARK))
@@ -61,25 +57,17 @@ def msg_handler_recipient(bot, update):
             RECIPIENT = 'NONUMBER'
     hide_kb = telegram.ReplyKeyboardHide()
     bot.sendMessage(chat_id=chat_id, text='What do I send {}?'.format(RECIPIENT), reply_markup=hide_kb)
-    bot_controller.dispatcher.removeTelegramMessageHandler(msg_handler_recipient)
-    bot_controller.dispatcher.addTelegramMessageHandler(msg_handler_content)
+    bot_controller.set_message_handler(msg_handler_content)
 
 @auth_required
 def sms(bot, update):
-    global MESSAGE_HANDLER
     chat_id = update.message.chat_id
     text = utils.remove_first_word(update.message.text).strip()
     if not text:
-        # response = 'Who do you want to message?'
         custom_keyboard = [CONTACTS.keys()]
         reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
         logger.debug(bot_controller.dispatcher)
         bot.sendMessage(chat_id=chat_id, text='Who do you want to message?', reply_markup=reply_markup)
         logger.debug(bot_controller.dispatcher.telegram_message_handlers)
-        MESSAGE_HANDLER = bot_controller.dispatcher.telegram_message_handlers[0]
-        bot_controller.dispatcher.addTelegramMessageHandler(msg_handler_recipient)
-        bot_controller.dispatcher.removeTelegramMessageHandler(MESSAGE_HANDLER)
-    # else:
-    #     response = __sms(text)
-    # bot.sendMessage(chat_id=update.message.chat_id, text=response)
+        bot_controller.set_message_handler(msg_handler_recipient)
 

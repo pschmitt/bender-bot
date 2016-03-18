@@ -2,12 +2,20 @@
 # encoding: utf-8
 
 dispatcher = None
-message_handler = None
+ORIGINAL_MESSAGE_HANDLERS = None
+
+def __remove_all_message_handlers():
+    for h in dispatcher.telegram_message_handlers:
+        dispatcher.removeTelegramMessageHandler(h)
 
 def set_message_handler(handler):
-    pass
+    global ORIGINAL_MESSAGE_HANDLERS
+    ORIGINAL_MESSAGE_HANDLERS = dispatcher.telegram_message_handlers
+    __remove_all_message_handlers()
+    dispatcher.addTelegramMessageHandler(handler)
 
-def reset_message_handler(handler):
-    dispatcher.addTelegramMessageHandler(msg_handler_recipient)
-    dispatcher.removeTelegramMessageHandler(MESSAGE_HANDLER)
+def reset_message_handler():
+    __remove_all_message_handlers()
+    for h in ORIGINAL_MESSAGE_HANDLERS:
+        dispatcher.addTelegramMessageHandler(h)
 
