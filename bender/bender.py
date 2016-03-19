@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import absolute_import
 from plugins.clear import clear
+from plugins.emojis import emojis
 from plugins.lights import lights
 from plugins.quote import quote
 from plugins.shell_exec import shell_exec
@@ -40,11 +41,6 @@ def error_handler(bot, update, error):
         err_msg = 'Update "{}" caused error "{}"'.format(update, error)
         send_message(bot, update, err_msg)
 
-def emoji_test(bot, update):
-    from telegram import Emoji
-    chat_id = update.message.chat_id
-    bot.sendMessage(chat_id=chat_id, text='{} Message sent!'.format(unicode(Emoji.HEAVY_CHECK_MARK, 'utf-8')))
-
 if __name__ == '__main__':
 
     logging.basicConfig(
@@ -57,6 +53,7 @@ if __name__ == '__main__':
 
     PLUGINS = [
         clear,
+        emojis,
         gimme,
         insult,
         lights,
