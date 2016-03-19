@@ -40,7 +40,7 @@ def message_handler_light_selection(bot, update):
     text = re.sub(r': (on|off)', '', update.message.text)
     try:
         state = __light_toggle(text)
-        response = u'{} Toggled light {} (state: {})'.format(emoji(Emoji.HEAVY_CHECK_MARK), text, 'on' if state else 'off')
+        response = u'{} Toggled light {} (state: {})'.format(emoji(Emoji.WHITE_HEAVY_CHECK_MARK), text, 'on' if state else 'off')
     except LightNotFoundException:
         response = u'{} Could not find light named {}'.format(emoji(Emoji.CROSS_MARK), text)
     logger.error('RESET')

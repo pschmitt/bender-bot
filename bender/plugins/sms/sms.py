@@ -40,7 +40,7 @@ def msg_handler_content(bot, update):
     bot_controller.reset_message_handler()
     bot.sendMessage(
         chat_id=chat_id,
-        text='{} Message sent!'.format(emoji(Emoji.HEAVY_CHECK_MARK))
+        text='{} Message sent!'.format(emoji(Emoji.WHITE_HEAVY_CHECK_MARK))
     )
 
 @auth_required
