@@ -11,12 +11,18 @@ pip install -r requirement.txt
 cp bender-bot.service ~/.config/systemd/user
 ```
 
-# Configuration
+## Configuration
 
 Edit the [bender.yaml.sample](bender.yaml.sample) file and move it:
 
 ```bash
 mv bender.yaml.sample bender.yaml
+```
+
+## Start
+
+```bash
+systemctl --user start bender-bot.service
 ```
 
 ## License
