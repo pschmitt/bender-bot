@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 
 COMMANDS = ['random_fact']
+ALIASES = {'random_fact': ['random', 'rnd']}
 
 def __random():
     r = requests.get('http://randomfunfacts.com')

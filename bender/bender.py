@@ -63,26 +63,22 @@ if __name__ == '__main__':
         sms,
         snap,
     ]
+    HELP = ''
 
     for p in PLUGINS:
-        print(p)
         for c in p.COMMANDS:
-            bc.dispatcher.addTelegramCommandHandler(c, getattr(p, c))
+            cmd = getattr(p, c)
+            bc.dispatcher.addTelegramCommandHandler(c, cmd)
+            # Set up command aliases
+            if hasattr(p, 'ALIASES'):
+                if c in p.ALIASES:
+                    for alias in p.ALIASES[c]:
+                        bc.dispatcher.addTelegramCommandHandler(alias, cmd)
 
-    # bc.dispatcher.addTelegramMessageHandler(emoji_test)
     bc.dispatcher.addTelegramMessageHandler(quote.quote)
     bc.dispatcher.addUnknownTelegramCommandHandler(unknown_command)
     bc.dispatcher.addErrorHandler(error_handler)
-
     # bc.dispatcher.addTelegramCommandHandler('help', help)
-    # dispatcher.addTelegramCommandHandler('start', start)
-    # dispatcher.addTelegramCommandHandler('insult', insult)
-    # dispatcher.addTelegramCommandHandler('random', random_fact)
-    # dispatcher.addTelegramCommandHandler('shell', shell_exec)
-    # dispatcher.addTelegramCommandHandler('exec', shell_exec)
-    # dispatcher.addTelegramCommandHandler('gimme', gimme)
-    # dispatcher.addTelegramCommandHandler('lights', lights)
-    # dispatcher.addTelegramCommandHandler('restart', restart)
 
     updater.start_polling()
     updater.idle()

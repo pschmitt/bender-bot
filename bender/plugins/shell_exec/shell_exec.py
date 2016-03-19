@@ -10,6 +10,7 @@ from shell import shell as sh
 import bot_controller
 
 COMMANDS = ['shell_exec', 'ping']
+ALIASES = {'shell_exec': ['shell', 'sh']}
 
 def __shell(cmd):
     try:
