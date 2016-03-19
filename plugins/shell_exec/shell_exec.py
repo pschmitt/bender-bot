@@ -7,8 +7,9 @@ from utils import remove_first_word
 from telegram import Emoji
 from emoji import emoji
 from shell import shell as sh
+import bot_controller
 
-COMMANDS = ['shell_exec']
+COMMANDS = ['shell_exec', 'ping']
 
 def __shell(cmd):
     try:
@@ -23,9 +24,34 @@ def __shell(cmd):
     return response
 
 @auth_required
+def message_handler_command(bot, update):
+    from bender import send_message
+    text = update.message.text
+    if text:
+        response = __shell(text)
+    else:
+        response = 'Whatever'
+    bot_controller.reset_message_handler()
+    send_message(bot, update, response)
+
+@auth_required
 def shell_exec(bot, update):
     from bender import send_message
     # Remove first word (shell or /shell)
     text = remove_first_word(update.message.text)
-    response = __shell(text)
+    if text:
+        response = __shell(text)
+    else:
+        response = 'What command should I run?'
+        bot_controller.set_message_handler(message_handler_command)
     send_message(bot, update, response)
+
+@auth_required
+def ping(bot, update):
+    from bender import send_message
+    text = remove_first_word(update.message.text.strip())
+    if not text:
+        send_message(bot, update, 'Missing host')
+    else:
+        p = __shell('ping -c 1 -w 1 {}'.format(text))
+        send_message(bot, update, p)
