@@ -10,6 +10,9 @@ from telegram import Emoji
 from emoji import emoji
 import bot_controller
 import re
+import logging
+
+logger = logging.getLogger()
 
 COMMANDS = ['lights']
 
@@ -40,6 +43,8 @@ def message_handler_light_selection(bot, update):
         response = u'{} Toggled light {} (state: {})'.format(emoji(Emoji.HEAVY_CHECK_MARK), text, 'on' if state else 'off')
     except LightNotFoundException:
         response = u'{} Could not find light named {}'.format(emoji(Emoji.CROSS_MARK), text)
+    logger.error('RESET')
+    bot_controller.reset_message_handler()
     return send_message(bot, update, response)
 
 def lights(bot, update):

@@ -10,12 +10,15 @@ def __remove_all_message_handlers():
 
 def set_message_handler(handler):
     global ORIGINAL_MESSAGE_HANDLERS
-    ORIGINAL_MESSAGE_HANDLERS = dispatcher.telegram_message_handlers
+    if ORIGINAL_MESSAGE_HANDLERS is None:
+        ORIGINAL_MESSAGE_HANDLERS = list(dispatcher.telegram_message_handlers)
     __remove_all_message_handlers()
     dispatcher.addTelegramMessageHandler(handler)
 
 def reset_message_handler():
+    global ORIGINAL_MESSAGE_HANDLERS
     __remove_all_message_handlers()
     for h in ORIGINAL_MESSAGE_HANDLERS:
         dispatcher.addTelegramMessageHandler(h)
+    ORIGINAL_MESSAGE_HANDLERS = None
 
