@@ -66,7 +66,6 @@ if __name__ == '__main__':
     HELP = ''
 
     for p in PLUGINS:
-        print(p)
         for c, value in p.COMMANDS.iteritems():
             cmd = getattr(p, c)
             bc.dispatcher.addTelegramCommandHandler(c, cmd)
