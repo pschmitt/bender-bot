@@ -28,7 +28,8 @@ def get_command_text(prefix=''):
     return register
 
 def get_help_text():
-    return get_command_text(prefix='/')
+    cmd_help = get_command_text(prefix='/')
+    return '/help - Help\n{}'.format(cmd_help)
 
 def register():
     # TODO Messge @BotFather with this text
