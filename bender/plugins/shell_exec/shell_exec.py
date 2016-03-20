@@ -9,7 +9,7 @@ from emoji import emoji
 from shell import shell as sh
 import bot_controller
 
-COMMANDS = ['shell_exec', 'ping']
+COMMANDS = ['shell_exec', 'ping', 'ls']
 ALIASES = {'shell_exec': ['shell', 'sh']}
 
 def __shell(cmd):
@@ -56,3 +56,10 @@ def ping(bot, update):
     else:
         p = __shell('ping -c 1 -w 1 {}'.format(text))
         send_message(bot, update, p)
+
+@auth_required
+def ls(bot, update):
+    from bender import send_message
+    text = remove_first_word(update.message.text.strip())
+    p = __shell('ls -al {}'.format(text))
+    send_message(bot, update, p)
