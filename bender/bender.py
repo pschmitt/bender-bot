@@ -4,6 +4,7 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import absolute_import
+from register_commands import get_help_text
 from plugins.clear import clear
 from plugins.emojis import emojis
 from plugins.lights import lights
@@ -41,6 +42,9 @@ def error_handler(bot, update, error):
         err_msg = 'Update "{}" caused error "{}"'.format(update, error)
         send_message(bot, update, err_msg)
 
+def help_cmd(bot, update):
+    send_message(bot, update, get_help_text())
+
 if __name__ == '__main__':
 
     logging.basicConfig(
@@ -63,14 +67,10 @@ if __name__ == '__main__':
         sms,
         snap,
     ]
-    HELP = ''
-
     for p in PLUGINS:
         for c, value in p.COMMANDS.iteritems():
             cmd = getattr(p, c)
             bc.dispatcher.addTelegramCommandHandler(c, cmd)
-            if 'description' in value:
-                HELP += '{} - {}\n'.format(c, value['description'])
             if 'aliases' in value:
                 for alias in value['aliases']:
                     bc.dispatcher.addTelegramCommandHandler(alias, cmd)
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     bc.dispatcher.addTelegramMessageHandler(quote.quote)
     bc.dispatcher.addUnknownTelegramCommandHandler(unknown_command)
     bc.dispatcher.addErrorHandler(error_handler)
-    # bc.dispatcher.addTelegramCommandHandler('help', help)
+    bc.dispatcher.addTelegramCommandHandler('help', help_cmd)
 
     updater.start_polling()
     updater.idle()
