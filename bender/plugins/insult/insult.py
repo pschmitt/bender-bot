@@ -4,7 +4,11 @@
 import requests
 from bs4 import BeautifulSoup
 
-COMMANDS = ['insult']
+COMMANDS = {
+    'insult': {
+        'description': 'Get insulted, for free!',
+    }
+}
 
 def __insult():
     r = requests.get('http://www.insultgenerator.org/')

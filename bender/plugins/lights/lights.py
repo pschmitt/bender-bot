@@ -14,7 +14,11 @@ import logging
 
 logger = logging.getLogger()
 
-COMMANDS = ['lights']
+COMMANDS = {
+    'lights': {
+        'description': 'Toggle a light'
+    }
+}
 
 class LightNotFoundException(Exception):
     pass

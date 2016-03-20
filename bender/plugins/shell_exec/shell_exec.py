@@ -9,8 +9,18 @@ from emoji import emoji
 from shell import shell as sh
 import bot_controller
 
-COMMANDS = ['shell_exec', 'ping', 'ls']
-ALIASES = {'shell_exec': ['shell', 'sh']}
+COMMANDS = {
+    'shell_exec': {
+        'description': 'Execute a shell command',
+        'aliases': ['shell', 'sh']
+    },
+    'ping': {
+        'description': 'Ping a host'
+    },
+    'ls': {
+        'description': 'List files in folder'
+    }
+}
 
 def __shell(cmd):
     try:

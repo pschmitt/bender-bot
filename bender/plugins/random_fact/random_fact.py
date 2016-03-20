@@ -4,8 +4,12 @@
 import requests
 from bs4 import BeautifulSoup
 
-COMMANDS = ['random_fact']
-ALIASES = {'random_fact': ['random', 'rnd']}
+COMMANDS = {
+    'random_fact': {
+        'description': 'Get a random fact',
+        'aliases': ['random', 'rnd']
+    }
+}
 
 def __random():
     r = requests.get('http://randomfunfacts.com')

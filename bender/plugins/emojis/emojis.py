@@ -5,7 +5,11 @@ from __future__ import unicode_literals
 from emoji import emoji
 from telegram import Emoji
 
-COMMANDS = ['emojis']
+COMMANDS = {
+    'emoji': {
+        'description': 'Show all emojis telegram supports'
+    },
+}
 
 def emojis(bot, update):
     from bender import send_message

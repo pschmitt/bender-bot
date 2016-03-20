@@ -7,7 +7,12 @@ from telegram import Emoji
 from utils import remove_first_word
 from emoji import emoji
 
-COMMANDS = ['gimme']
+COMMANDS = {
+    'gimme': {
+        'description': 'Retrieve files',
+        'aliases': ['get']
+    }
+}
 
 @auth_required
 def gimme(bot, update):

@@ -66,14 +66,17 @@ if __name__ == '__main__':
     HELP = ''
 
     for p in PLUGINS:
-        for c in p.COMMANDS:
+        print(p)
+        for c, value in p.COMMANDS.iteritems():
             cmd = getattr(p, c)
             bc.dispatcher.addTelegramCommandHandler(c, cmd)
-            # Set up command aliases
-            if hasattr(p, 'ALIASES'):
-                if c in p.ALIASES:
-                    for alias in p.ALIASES[c]:
-                        bc.dispatcher.addTelegramCommandHandler(alias, cmd)
+            if 'description' in value:
+                HELP += '{} - {}\n'.format(c, value['description'])
+            if 'aliases' in value:
+                for alias in value['aliases']:
+                    bc.dispatcher.addTelegramCommandHandler(alias, cmd)
+    print(HELP)
+    exit(3)
 
     bc.dispatcher.addTelegramMessageHandler(quote.quote)
     bc.dispatcher.addUnknownTelegramCommandHandler(unknown_command)

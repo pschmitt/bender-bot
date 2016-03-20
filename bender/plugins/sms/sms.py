@@ -13,7 +13,12 @@ import phonenumbers
 import telegram
 import utils
 
-COMMANDS = ['sms']
+COMMANDS = {
+    'sms': {
+        'description': 'Send a text message'
+    }
+}
+
 CONTACTS = get_config_section(section='contacts')
 DEFAULT_LOCATION = 'FR'
 

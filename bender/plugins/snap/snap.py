@@ -7,7 +7,14 @@ import telegram
 from security import auth_required
 from config import get_config_section
 
-COMMANDS = ['snap', 'videosnap']
+COMMANDS = {
+    'snap': {
+        'description': 'Snap a picture from the home surveillance camera',
+    },
+    'videosnap': {
+        'description': 'Get a video of the last 30 seconds'
+    }
+}
 
 @auth_required
 def snap(bot, update):
