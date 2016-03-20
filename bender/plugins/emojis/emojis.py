@@ -6,7 +6,7 @@ from emoji import emoji
 from telegram import Emoji
 
 COMMANDS = {
-    'emoji': {
+    'emojis': {
         'description': 'Show all emojis telegram supports'
     },
 }
