@@ -75,8 +75,6 @@ if __name__ == '__main__':
             if 'aliases' in value:
                 for alias in value['aliases']:
                     bc.dispatcher.addTelegramCommandHandler(alias, cmd)
-    print(HELP)
-    exit(3)
 
     bc.dispatcher.addTelegramMessageHandler(quote.quote)
     bc.dispatcher.addUnknownTelegramCommandHandler(unknown_command)
