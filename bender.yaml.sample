@@ -11,6 +11,7 @@ camera:
 
 hue:
     host: XXX
+    port: 80
     username: XXX
 
 contacts:

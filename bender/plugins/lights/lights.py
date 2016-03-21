@@ -25,7 +25,7 @@ class LightNotFoundException(Exception):
 
 def __bridge():
     config = get_config_section(section='hue')
-    return Bridge(ip=config['host'], username=config['username'])
+    return Bridge(ip='{}:{}'.format(config['host'], config.get('port', 80)), username=config['username'])
 
 def __get_light_by_name(bridge, name):
     for l in bridge.lights:
