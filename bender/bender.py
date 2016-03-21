@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import absolute_import
 from register_commands import get_help_text
+from plugins.cancel import cancel
 from plugins.clear import clear
 from plugins.emojis import emojis
 from plugins.lights import lights
@@ -56,6 +57,7 @@ if __name__ == '__main__':
     bc.dispatcher = updater.dispatcher
 
     PLUGINS = [
+        cancel,
         clear,
         emojis,
         gimme,

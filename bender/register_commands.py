@@ -27,13 +27,13 @@ def get_command_text(prefix=''):
             register += '\n'
     return register
 
-def get_help_text():
-    cmd_help = get_command_text(prefix='/')
-    return '/help - Help\n{}'.format(cmd_help)
+def get_help_text(prefix='/'):
+    cmd_help = get_command_text(prefix)
+    return '{}help - Help\n{}'.format(prefix, cmd_help)
 
 def register():
     # TODO Messge @BotFather with this text
-    print(get_command_text())
+    print(get_help_text(prefix=''))
 
 if __name__ == '__main__':
     register()
