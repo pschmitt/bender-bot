@@ -19,6 +19,9 @@ COMMANDS = {
     },
     'ls': {
         'description': 'List files in folder'
+    },
+    'nmap': {
+        'description': 'Network scan'
     }
 }
 
@@ -33,6 +36,11 @@ def __shell(cmd):
     except OSError as e:
         response = '{} That did\'t go well: {}'.format(emoji(Emoji.CROSS_MARK), e)
     return response
+
+def __shell_exec(bot, update, command, text):
+    from bender import send_message
+    p = __shell('{} {}'.format(command, text))
+    send_message(bot, update, p)
 
 @auth_required
 def message_handler_command(bot, update):
@@ -69,7 +77,10 @@ def ping(bot, update):
 
 @auth_required
 def ls(bot, update):
-    from bender import send_message
     text = remove_first_word(update.message.text.strip())
-    p = __shell('ls -al {}'.format(text))
-    send_message(bot, update, p)
+    __shell_exec(bot, update, 'ls -al', text)
+
+@auth_required
+def nmap(bot, update):
+    text = remove_first_word(update.message.text.strip())
+    __shell_exec(bot, update, 'nmap', text)
