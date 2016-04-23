@@ -2,13 +2,13 @@
 # coding: utf-8
 
 from __future__ import unicode_literals
-from config import get_config_section
+from bender.config import get_plugin_config
 from phue import Bridge
-from utils import remove_first_word
+from bender.utils import remove_first_word
 from telegram import ReplyKeyboardMarkup
 from telegram import Emoji
-from emoji import emoji
-import bot_controller
+from bender.telegram.emoji import emoji
+import bender.telegram.bot_controller as bot_controller
 import re
 import logging
 
@@ -24,7 +24,7 @@ class LightNotFoundException(Exception):
     pass
 
 def __bridge():
-    config = get_config_section(section='hue')
+    config = get_plugin_config(plugin='hue')
     return Bridge(ip='{}:{}'.format(config['host'], config.get('port', 80)), username=config['username'])
 
 def __get_light_by_name(bridge, name):
@@ -61,4 +61,3 @@ def lights(bot, update):
         reply_markup = ReplyKeyboardMarkup(custom_keyboard)
         bot.sendMessage(chat_id=chat_id, text='What lamp should I toggle?', reply_markup=reply_markup)
         bot_controller.set_message_handler(message_handler_light_selection)
-

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from bot_controller import reset_message_handler
+from bender.telegram.bot_controller import reset_message_handler
 
 COMMANDS = {
     'cancel': {
@@ -11,7 +11,7 @@ COMMANDS = {
 }
 
 def cancel(bot, update):
-    from bender import send_message
+    from bender.telegram.bender import send_message
     if reset_message_handler():
         send_message(bot, update, 'Doks. I aborted the mission.')
     else:

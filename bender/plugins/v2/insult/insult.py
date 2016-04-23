@@ -6,15 +6,13 @@ from bs4 import BeautifulSoup
 
 COMMANDS = {
     'insult': {
+        'short': 'Insult me',
         'description': 'Get insulted, for free!',
+        'payload': 'INSULT',
     }
 }
 
-def __insult():
+def insult():
     r = requests.get('http://www.insultgenerator.org/')
     s = BeautifulSoup(r.text, 'html.parser')
     return s.br.text.strip()
-
-def insult(bot, update):
-    from bender.telegram.bender import send_message
-    send_message(bot, update, text=__insult())

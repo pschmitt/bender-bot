@@ -8,7 +8,7 @@ COMMANDS = {
 }
 
 def clear(bot, update):
-    from bender import send_message
+    from bender.telegram.bender import send_message
     message = '''
     .
 

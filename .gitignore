@@ -3,3 +3,8 @@
 bender*.yaml
 config
 chat_id.txt
+build/
+dist
+*.spec
+.stfolder
+.stignore

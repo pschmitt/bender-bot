@@ -1,19 +1,47 @@
 bot:
-    token: XXXX
-    authorized_users:
-        - XXXX
+    telegram:
+        token: XXX
+        authorized_users:
+            - XXX
+    facebook:
+        bind_address: XXX
+        bind_port: XXX
+        endpoint: XXX
+        page_token: XXX
+        verification_token: XXX
+        authorized_users:
+            - XXX
 
-camera:
-    host: XXX
-    port 88
-    username: XXX
-    password: XXX
+plugins:
+    camera:
+        host: XXX
+        port 88
+        username: XXX
+        password: XXX
 
-hue:
-    host: XXX
-    port: 80
-    username: XXX
+    hue:
+        host: XXX
+        port: 80
+        username: XXX
+
+    contacts:
+        Wife: "+XXX"
+        Myself: "+XXX"
 
 contacts:
-    Wife: "+XXX"
-    Myself: "+XXX"
+    Me:
+        nicknames:
+            - me
+        phone: "XXX"
+        facebook:
+            username: XXX
+            id: XXX
+        telegram: XXX
+    wife:
+        nicknames:
+            - wife
+            - her
+        phone: "XXX"
+        facebook:
+            username: XXX
+            id: XXX

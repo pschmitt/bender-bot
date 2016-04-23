@@ -2,12 +2,12 @@
 # coding: utf-8
 
 from __future__ import unicode_literals
-from security import auth_required
-from utils import remove_first_word
-from telegram import Emoji
-from emoji import emoji
+from bender.telegram.security import auth_required
+from bender.telegram.emoji import emoji
 from shell import shell as sh
-import bot_controller
+from telegram import Emoji
+from bender.utils import remove_first_word
+import bender.telegram.bot_controller as bot_controller
 
 COMMANDS = {
     'shell_exec': {

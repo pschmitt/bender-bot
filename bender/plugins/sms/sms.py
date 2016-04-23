@@ -2,16 +2,16 @@
 # coding: utf-8
 
 from __future__ import unicode_literals
-from config import get_config_section
-from emoji import emoji
-from security import auth_required
+from bender.telegram.emoji import emoji
+from bender.config import get_plugin_config
+from bender.telegram.security import auth_required
 from telegram import Emoji
-import bot_controller
+import bender.telegram.bot_controller as bot_controller
+import bender.utils as utils
 import gammu.smsd
 import logging
 import phonenumbers
 import telegram
-import utils
 
 COMMANDS = {
     'sms': {
@@ -19,7 +19,7 @@ COMMANDS = {
     }
 }
 
-CONTACTS = get_config_section(section='contacts')
+CONTACTS = get_plugin_config(plugin='contacts')
 DEFAULT_LOCATION = 'FR'
 
 RECIPIENT = None

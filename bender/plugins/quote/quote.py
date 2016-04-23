@@ -11,5 +11,5 @@ COMMANDS = {
 }
 
 def quote(bot, update):
-    from bender import send_message
+    from bender.telegram.bender import send_message
     return send_message(bot, update, random.choice(QUOTES))
