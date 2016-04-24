@@ -17,6 +17,7 @@ from bender.plugins.v2.insult import insult
 from bender.plugins.v2.random_fact import random_fact
 from bender.plugins.v2.quote import quote
 from bender.plugins.v2.snap import snap
+# from bender.plugins.v2.lights import lights
 
 PLUGINS = [
     # 'bender.plugins.v2.insult',
@@ -25,7 +26,8 @@ PLUGINS = [
     insult,
     quote,
     random_fact,
-    snap
+    snap,
+    # lights
 ]
 
 # Resources are represented by long-lived class instances

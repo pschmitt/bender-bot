@@ -17,7 +17,7 @@ pickleshare==0.6
 ptyprocess==0.5.1
 pycrypto==2.6.1
 PyInstaller==3.1.1
-python-gammu==2.5
+# python-gammu==2.5
 python-mimeparse==1.5.1
 python-telegram-bot==3.3
 PyYAML==3.11
