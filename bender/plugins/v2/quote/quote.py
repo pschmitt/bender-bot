@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
+from bender.response import TextResponse
 from quotes import QUOTES
 import random
 
@@ -14,4 +15,7 @@ COMMANDS = {
 }
 
 def quote():
-    return random.choice(QUOTES)
+    text = random.choice(QUOTES)
+    return TextResponse(
+        text, repeat=COMMANDS['quote']['payload']
+    )

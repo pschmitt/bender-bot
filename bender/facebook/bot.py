@@ -10,6 +10,7 @@ import requests
 import pprint
 from shell import shell
 from bender.utils import fuzzy_find_key
+from bender.response import TextResponse, PictureResponse
 
 
 logging.basicConfig(
@@ -21,18 +22,6 @@ logger = logging.getLogger(__name__)
 # logging.getLogger('requests').setLevel(logging.WARNING)
 # logging.getLogger('urllib3').setLevel(logging.WARNING)
 
-class Response():
-    def __init__(self, text):
-        self.text = text
-
-class TextResponse(Response):
-    def __init__(self, text, picture):
-        Response.__init__(self, text)
-
-class PictureResponse(Response):
-    def __init__(self, text, picture):
-        Response.__init__(self, text)
-        self.picture = picture
 
 class BenderBot():
     def __init__(self, verification_token, page_token, plugins=None):
@@ -85,14 +74,39 @@ class BenderBot():
             # logger.debug(pprint.pformat(self.COMMAND_HANDLERS))
             # logger.debug(pprint.pformat(self.CALLBACK_HANDLERS))
 
-    def send_message(self, recipient, text):
-        return requests.post(
-            self.FB_CHAT_API,
-            json={
-                'recipient': {'id': recipient},
-                'message': {'text': text},
-            },
-        )
+    def send_message(self, recipient, message):
+        if isinstance(message, PictureResponse):
+            return self.send_picture(recipient, message)
+        elif isinstance(message, TextResponse) or type(message) is str or type(message) is unicode:
+            return self.send_text_message(recipient, message)
+
+    def send_text_message(self, recipient, text):
+        logger.debug('RESPONSE: {}'.format(text))
+        # if text is a string, send it directly
+        if type(text) in [str, unicode]:
+            return requests.post(
+                self.FB_CHAT_API,
+                json={
+                    'recipient': {'id': recipient},
+                    'message': {'text': text},
+                },
+            )
+        # Here we can safely assume that text is a TextResponse instance
+        if not text.repeat:
+            # No "repeat" button requested. Send the message
+            return requests.post(
+                self.FB_CHAT_API,
+                json={
+                    'recipient': {'id': recipient},
+                    'message': {'text': text.text},
+                },
+            )
+        # Repeat mode. Send answer as a button response
+        return self.send_buttons(recipient, text.text, [{
+            'type': 'postback',
+            'title': 'Another!',
+            'payload': text.repeat
+        }])
 
     def send_buttons(self, recipient, title, buttons=None):
         return requests.post(
@@ -112,7 +126,7 @@ class BenderBot():
             }
         )
 
-    def send_picture(self, recipient, title, picture):
+    def send_picture(self, recipient, picture):
         # curl
         # -F recipient='{"id":"USER_ID"}' \
         # -F message='{"attachment":{"type":"image", "payload":{}}}' \
@@ -121,10 +135,16 @@ class BenderBot():
 
         cmd = 'curl -F recipient="{\'id\': \'' + str(recipient) + '\'}" ' \
             '-F message="{\'attachment\':{\'type\':\'image\', \'payload\':{}}}" ' \
-            '-F filedata=@' + picture + ' ' + self.FB_CHAT_API
+            '-F filedata=@' + picture.picture + ' ' + self.FB_CHAT_API
 
         result = shell(cmd)
         logger.debug(result.output)
+        if picture.repeat:
+            self.send_buttons(recipient, ' ', [{
+                'type': 'postback',
+                'title': 'Another!',
+                'payload': picture.repeat
+            }])
         return result
 
         # # files = {'filedata': open(picture, 'rb')}
@@ -155,23 +175,13 @@ class BenderBot():
         k = fuzzy_find_key(self.COMMAND_HANDLERS, text)
         if k:
             response = self.COMMAND_HANDLERS[k]()
-            if isinstance(response, PictureResponse):
-                logger.debug('Send picture response')
-                return self.send_picture(sender, response.text, response.picture)
-            else:
-                logger.debug('Send text response')
-                return self.send_message(sender, response)
+            return self.send_message(sender, response)
         return self.main_menu(sender)
 
     def handle_postback(self, sender, payload):
         if payload in self.CALLBACK_HANDLERS:
             response = self.CALLBACK_HANDLERS[payload]()
-            if isinstance(response, PictureResponse):
-                logger.debug('Send picture response')
-                return self.send_picture(sender, response.text, response.picture)
-            else:
-                logger.debug('Send text response')
-                return self.send_message(sender, response)
+            return self.send_message(sender, response)
         return self.send_message(sender, 'Hu?')
 
 

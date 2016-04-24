@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # coding: utf-8
 
-import requests
+from bender.response import TextResponse
 from bs4 import BeautifulSoup
+import requests
 
 COMMANDS = {
     'insult': {
@@ -15,4 +16,7 @@ COMMANDS = {
 def insult():
     r = requests.get('http://www.insultgenerator.org/')
     s = BeautifulSoup(r.text, 'html.parser')
-    return s.br.text.strip()
+    text = s.br.text.strip()
+    return TextResponse(
+        text, repeat=COMMANDS['insult']['payload']
+    )

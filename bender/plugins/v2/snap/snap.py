@@ -7,7 +7,7 @@ from bender.utils import check_port
 from sshtunnel import SSHTunnelForwarder
 import logging
 import random
-from bender.facebook.bot import PictureResponse
+from bender.response import PictureResponse
 
 
 COMMANDS = {
@@ -35,7 +35,7 @@ def __snap(cam):
     with open(tmp_file, 'wb') as f:
         f.write(pic)
     # os.remove(tmp_file)
-    return PictureResponse('', tmp_file)
+    return PictureResponse('', tmp_file, repeat='SNAP')
 
 def snap():
     cam_config = get_plugin_config(plugin='camera')
