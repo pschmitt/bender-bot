@@ -26,7 +26,7 @@ selenium==2.53.0
 shell==1.0.1
 simplegeneric==0.8.1
 six==1.10.0
-snappergui==0.1
+# snappergui==0.1
 sshtunnel==0.0.8.2
 traitlets==4.2.1
 Unidecode==0.4.19
