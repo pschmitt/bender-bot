@@ -16,6 +16,7 @@ app = falcon.API()
 from bender.plugins.v2.insult import insult
 from bender.plugins.v2.random_fact import random_fact
 from bender.plugins.v2.quote import quote
+from bender.plugins.v2.snap import snap
 
 PLUGINS = [
     # 'bender.plugins.v2.insult',
@@ -23,7 +24,8 @@ PLUGINS = [
     # 'bender.plugins.v2.random_fact'
     insult,
     quote,
-    random_fact
+    random_fact,
+    snap
 ]
 
 # Resources are represented by long-lived class instances

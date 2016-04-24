@@ -37,5 +37,9 @@ if __name__ == '__main__':
 
     assert recipient.isdigit(), 'Recipient ID must be an integer ' + recipient
 
-    print(bot.send_message(recipient, args.MESSAGE).json())
+    # print(bot.send_message(recipient, args.MESSAGE).json())
+    print(recipient)
+    from bender.plugins.v2.snap.snap import snap
+    pic = snap()
+    print(bot.send_picture(recipient, title=args.MESSAGE, picture=pic.picture).output())
 

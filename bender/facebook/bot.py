@@ -8,6 +8,8 @@ import json
 import logging
 import requests
 import pprint
+from shell import shell
+from bender.utils import fuzzy_find_key
 
 
 logging.basicConfig(
@@ -16,8 +18,21 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 # Disable requests logs
-logging.getLogger('requests').setLevel(logging.WARNING)
-logging.getLogger('urllib3').setLevel(logging.WARNING)
+# logging.getLogger('requests').setLevel(logging.WARNING)
+# logging.getLogger('urllib3').setLevel(logging.WARNING)
+
+class Response():
+    def __init__(self, text):
+        self.text = text
+
+class TextResponse(Response):
+    def __init__(self, text, picture):
+        Response.__init__(self, text)
+
+class PictureResponse(Response):
+    def __init__(self, text, picture):
+        Response.__init__(self, text)
+        self.picture = picture
 
 class BenderBot():
     def __init__(self, verification_token, page_token, plugins=None):
@@ -97,19 +112,66 @@ class BenderBot():
             }
         )
 
+    def send_picture(self, recipient, title, picture):
+        # curl
+        # -F recipient='{"id":"USER_ID"}' \
+        # -F message='{"attachment":{"type":"image", "payload":{}}}' \
+        # -F filedata=@/tmp/testpng.png \
+        # "https://graph.facebook.com/v2.6/me/messages?access_token=PAGE_ACCESS_TOKEN"
+
+        cmd = 'curl -F recipient="{\'id\': \'' + str(recipient) + '\'}" ' \
+            '-F message="{\'attachment\':{\'type\':\'image\', \'payload\':{}}}" ' \
+            '-F filedata=@' + picture + ' ' + self.FB_CHAT_API
+
+        result = shell(cmd)
+        logger.debug(result.output)
+        return result
+
+        # # files = {'filedata': open(picture, 'rb')}
+        # return requests.post(
+        #     self.FB_CHAT_API,
+        #     data={
+        #         'recipient': {'id': recipient},
+        #         'message': {
+        #             'attachment': {
+        #                 'type': 'image',
+        #                 'payload': {}
+        #             },
+        #         },
+        #         # 'filedata': {open(picture, 'rb')}
+        #     },
+        #     # files=files
+        # )
+
     def main_menu(self, recipient):
-        return self.send_buttons(recipient, 'Main menu', self.MAIN_MENU)
+        menu_parts = [self.MAIN_MENU[i:i+3] for i in range(0, len(self.MAIN_MENU), 3)] #zip(*[iter(self.MAIN_MENU)]*3)
+        for part in menu_parts:
+            logger.debug('PART# ' + str(part))
+            # NOTE: Title cannot be empty, otherwise messenger wont show the
+            # buttons
+            self.send_buttons(recipient, 'Main menu' if part == menu_parts[0] else ' ', part)
 
     def handle_message(self, sender, text):
-        if text in self.COMMAND_HANDLERS:
-            response = self.COMMAND_HANDLERS[text]()
-            return self.send_message(sender, response)
+        k = fuzzy_find_key(self.COMMAND_HANDLERS, text)
+        if k:
+            response = self.COMMAND_HANDLERS[k]()
+            if isinstance(response, PictureResponse):
+                logger.debug('Send picture response')
+                return self.send_picture(sender, response.text, response.picture)
+            else:
+                logger.debug('Send text response')
+                return self.send_message(sender, response)
         return self.main_menu(sender)
 
     def handle_postback(self, sender, payload):
         if payload in self.CALLBACK_HANDLERS:
             response = self.CALLBACK_HANDLERS[payload]()
-            return self.send_message(sender, response)
+            if isinstance(response, PictureResponse):
+                logger.debug('Send picture response')
+                return self.send_picture(sender, response.text, response.picture)
+            else:
+                logger.debug('Send text response')
+                return self.send_message(sender, response)
         return self.send_message(sender, 'Hu?')
 
 
@@ -155,9 +217,17 @@ class BenderResource:
             if 'message' in msg and 'text' in msg['message']:
                 text = msg['message']['text']
                 logger.debug('# TEXT: ' + text)
-                self.bot.handle_message(sender_id, text)
+                result = self.bot.handle_message(sender_id, text)
+                if hasattr(result, 'json'):
+                    logger.debug(result.json())
+                else:
+                    logger.debug(result)
             elif 'postback' in msg:
                 payload = msg['postback']['payload']
                 logger.debug('# POSTBACK PAYLOAD: ' + payload)
-                self.bot.handle_postback(sender_id, payload)
+                result = self.bot.handle_postback(sender_id, payload)
+                if hasattr(result, 'json'):
+                    logger.debug(result.json())
+                else:
+                    logger.debug(result)
 
