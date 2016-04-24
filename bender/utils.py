@@ -30,6 +30,9 @@ def check_port(host, port, timeout=0.2):
         return False
 
 def fuzzy_find_key(d, k):
+    '''
+    Find a key inside a dict, independently of its character case
+    '''
     for key in d.keys():
         if key == k:
             return k

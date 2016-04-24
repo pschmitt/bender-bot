@@ -12,6 +12,4 @@ WORKDIR /app
 ENV PARAMS="--bind 0.0.0.0:8000 --access-logfile - --reload bender.facebook.app:app"
 EXPOSE 8000
 
-USER nobody
-
 ENTRYPOINT /usr/bin/start.sh
