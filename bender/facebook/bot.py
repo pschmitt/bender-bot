@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
-
+from __future__ import unicode_literals
 from __future__ import print_function
 import falcon
 import json
@@ -78,6 +78,9 @@ class BenderBot():
         if isinstance(message, PictureResponse):
             return self.send_picture(recipient, message)
         elif isinstance(message, TextResponse) or type(message) is str or type(message) is unicode:
+            return self.send_text_message(recipient, message)
+        elif type(message) is list:
+            message = '\r\n'.join(message)
             return self.send_text_message(recipient, message)
 
     def send_text_message(self, recipient, text):
