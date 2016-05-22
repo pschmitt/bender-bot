@@ -28,7 +28,7 @@ logging.getLogger('urllib3').setLevel(logging.WARNING)
 class BenderBot(Bot):
     @property
     def admin_welcome_message(self):
-       return ':ok_hand: Ready to serve you mylord'
+       return ':ok_hand: Ready to serve you Mylord'
 
     @property
     def welcome_message(self):

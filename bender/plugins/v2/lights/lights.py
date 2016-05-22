@@ -10,6 +10,7 @@ from phue import Bridge
 from sshtunnel import SSHTunnelForwarder
 import logging
 
+
 logger = logging.getLogger()
 
 COMMANDS = {
