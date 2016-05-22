@@ -9,6 +9,7 @@ import logging
 from bender.response import PictureResponse
 from bender.utils import random_local_port
 from datetime import datetime
+from bender.facebook.security import auth_required
 
 
 COMMANDS = {
@@ -37,7 +38,8 @@ def __snap(cam):
     # os.remove(tmp_file)
     return PictureResponse(str(datetime.now()), tmp_file, repeat='SNAP')
 
-def snap():
+@auth_required
+def snap(sender):
     cam_config = get_plugin_config(plugin='camera')
 
     if not check_port(cam_config['host'], cam_config['port']):

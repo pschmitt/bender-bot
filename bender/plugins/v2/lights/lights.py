@@ -3,12 +3,13 @@
 
 from __future__ import unicode_literals
 from bender.config import get_plugin_config, get_ssh_config
+from bender.facebook.security import auth_required
 from bender.utils import check_port
+from bender.utils import random_local_port
 from phue import Bridge
 from sshtunnel import SSHTunnelForwarder
 import emoji
 import logging
-from bender.utils import random_local_port
 
 logger = logging.getLogger()
 
@@ -75,7 +76,8 @@ def message_handler_light_selection(bot, update):
     #     response = u'{} Could not find light named {}'.format(emoji(Emoji.CROSS_MARK), text)
     pass
 
-def lights():
+@auth_required
+def lights(sender):
     b = __bridge()
     logger.debug(b)
     return b

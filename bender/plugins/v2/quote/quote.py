@@ -14,7 +14,7 @@ COMMANDS = {
     }
 }
 
-def quote():
+def quote(sender):
     text = random.choice(QUOTES)
     return TextResponse(
         text, repeat=COMMANDS['quote']['payload']

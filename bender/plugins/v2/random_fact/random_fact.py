@@ -14,7 +14,7 @@ COMMANDS = {
     }
 }
 
-def random_fact():
+def random_fact(sender):
     r = requests.get('http://randomfunfacts.com')
     s = BeautifulSoup(r.text, 'html.parser')
     text = s.strong.i.text.strip()

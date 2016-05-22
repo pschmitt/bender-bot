@@ -13,7 +13,7 @@ COMMANDS = {
     }
 }
 
-def insult():
+def insult(sender):
     r = requests.get('http://www.insultgenerator.org/')
     s = BeautifulSoup(r.text, 'html.parser')
     text = s.br.text.strip()
