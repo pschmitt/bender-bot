@@ -2,6 +2,7 @@
 # coding: utf-8
 
 from types import FunctionType
+import random
 import socket
 
 
@@ -28,6 +29,15 @@ def check_port(host, port, timeout=0.2):
         return True
     except:
         return False
+
+def random_local_port():
+    '''
+    Get a random port that is free to use
+    '''
+    while True:
+        random_port = random.randint(1025, 65535)
+        if not check_port('127.0.0.1', random_local_port):
+            return random_port
 
 def fuzzy_find_key(d, k):
     '''

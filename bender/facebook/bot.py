@@ -1,16 +1,16 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from __future__ import unicode_literals
 from __future__ import print_function
+from __future__ import unicode_literals
+from bender.response import TextResponse, PictureResponse
+from bender.utils import fuzzy_find_key
+from shell import shell
 import falcon
 import json
 import logging
-import requests
 import pprint
-from shell import shell
-from bender.utils import fuzzy_find_key
-from bender.response import TextResponse, PictureResponse
+import requests
 
 
 logging.basicConfig(
@@ -19,8 +19,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 # Disable requests logs
-# logging.getLogger('requests').setLevel(logging.WARNING)
-# logging.getLogger('urllib3').setLevel(logging.WARNING)
+logging.getLogger('requests').setLevel(logging.WARNING)
+logging.getLogger('urllib3').setLevel(logging.WARNING)
 
 
 class BenderBot():
@@ -74,6 +74,14 @@ class BenderBot():
             # logger.debug(pprint.pformat(self.COMMAND_HANDLERS))
             # logger.debug(pprint.pformat(self.CALLBACK_HANDLERS))
 
+    def get_user_profile(self, user_id):
+        url = 'https://graph.facebook.com/v2.6/{}'.format(user_id)
+        params = {'fields': 'first_name,last_name,profile_pic', 'access_token': self.page_token}
+        return requests.get(
+            url,
+            params=params
+        ).json()
+
     def send_message(self, recipient, message):
         if isinstance(message, PictureResponse):
             return self.send_picture(recipient, message)
@@ -111,7 +119,7 @@ class BenderBot():
             'payload': text.repeat
         }])
 
-    def send_buttons(self, recipient, title, buttons=None):
+    def send_buttons(self, recipient, title, buttons=None, subtitle=None):
         return requests.post(
             self.FB_CHAT_API,
             json={
@@ -123,6 +131,56 @@ class BenderBot():
                             'template_type': 'button',
                             'text': title,
                             'buttons': buttons
+                        }
+                    }
+                }
+            }
+        )
+
+
+    def send_elements(self, recipient, elements=None):
+        return requests.post(
+            self.FB_CHAT_API,
+            json={
+                'recipient': {'id': recipient},
+                'message': {
+                    'attachment': {
+                        'type': 'template',
+                        'payload': {
+                            'template_type': 'generic',
+                            'elements': [{
+                                'title':'Classic White T-Shirt',
+                                'subtitle':'Soft white cotton t-shirt is back in style',
+                                'buttons':[{
+                                    'type':'web_url',
+                                    'url':'https://petersapparel.parseapp.com/view_item?item_id=100',
+                                    'title':'View Item'
+                                  }, {
+                                    'type':'web_url',
+                                    'url':'https://petersapparel.parseapp.com/buy_item?item_id=100',
+                                    'title':'Buy Item'
+                                  }, {
+                                    'type':'postback',
+                                    'title':'Bookmark Item',
+                                    'payload':'USER_DEFINED_PAYLOAD_FOR_ITEM100'
+                                  }]
+                            }, {
+                                'title':'Classic White T-Shirt',
+                                'subtitle':'Soft white cotton t-shirt is back in style',
+                                'buttons':[{
+                                    'type':'web_url',
+                                    'url':'https://petersapparel.parseapp.com/view_item?item_id=100',
+                                    'title':'View Item'
+                                  }, {
+                                    'type':'web_url',
+                                    'url':'https://petersapparel.parseapp.com/buy_item?item_id=100',
+                                    'title':'Buy Item'
+                                  }, {
+                                    'type':'postback',
+                                    'title':'Bookmark Item',
+                                    'payload':'USER_DEFINED_PAYLOAD_FOR_ITEM100'
+                                  }]
+                            }]
                         }
                     }
                 }
@@ -150,29 +208,31 @@ class BenderBot():
             }])
         return result
 
-        # # files = {'filedata': open(picture, 'rb')}
+        # files = {'filedata': open(picture.picture, 'rb')}
         # return requests.post(
         #     self.FB_CHAT_API,
-        #     data={
-        #         'recipient': {'id': recipient},
-        #         'message': {
-        #             'attachment': {
-        #                 'type': 'image',
-        #                 'payload': {}
-        #             },
-        #         },
-        #         # 'filedata': {open(picture, 'rb')}
-        #     },
-        #     # files=files
+        #     # json={
+        #     #     'recipient': {'id': recipient},
+        #     #     'message': {
+        #     #         'attachment': {
+        #     #             'type': 'image',
+        #     #             'payload': {}
+        #     #         },
+        #     #     },
+        #     # },
+        #     files=files
         # )
 
     def main_menu(self, recipient):
-        menu_parts = [self.MAIN_MENU[i:i+3] for i in range(0, len(self.MAIN_MENU), 3)] #zip(*[iter(self.MAIN_MENU)]*3)
+        menu_parts = [self.MAIN_MENU[i:i+3] for i in range(0, len(self.MAIN_MENU), 3)]
         for part in menu_parts:
             logger.debug('PART# ' + str(part))
             # NOTE: Title cannot be empty, otherwise messenger wont show the
             # buttons
             self.send_buttons(recipient, 'Main menu' if part == menu_parts[0] else ' ', part)
+        # logger.debug(
+        #     self.send_elements(recipient, None).json()
+        # )
 
     def handle_message(self, sender, text):
         k = fuzzy_find_key(self.COMMAND_HANDLERS, text)
