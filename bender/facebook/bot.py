@@ -11,6 +11,7 @@ import json
 import logging
 import pprint
 import requests
+from bender.bot import Bot
 
 
 logging.basicConfig(
@@ -23,14 +24,14 @@ logging.getLogger('requests').setLevel(logging.WARNING)
 logging.getLogger('urllib3').setLevel(logging.WARNING)
 
 
-class BenderBot():
+class BenderBot(Bot):
     def __init__(self, verification_token, page_token, plugins=None):
         self.verification_token = verification_token
         self.page_token = page_token
         self.plugins = plugins
         self.FB_CHAT_API = 'https://graph.facebook.com/v2.6/me/messages?access_token=' + self.page_token
         self.MAIN_MENU = []
-        self.COMMAND_HANDLERS = {}
+        self.MESSAGE_HANDLERS = {}
         self.CALLBACK_HANDLERS = {}
         self.HELP_TEXT = ''
         if plugins:
@@ -46,10 +47,10 @@ class BenderBot():
                     cmd = getattr(p, c)
 
                     # Construct command handler dict
-                    self.COMMAND_HANDLERS[c] = cmd
+                    self.MESSAGE_HANDLERS[c] = cmd
                     if 'aliases' in value:
                         for a in value['aliases']:
-                            self.COMMAND_HANDLERS[a] = cmd
+                            self.MESSAGE_HANDLERS[a] = cmd
 
                     # Construct payload handler dict
                     if 'payload' in value:
@@ -69,9 +70,9 @@ class BenderBot():
                                 self.HELP_TEXT += ', '
                     self.HELP_TEXT += '\r\n'
                     # Register 'help' to display HELP_TEXT
-                    self.COMMAND_HANDLERS['help'] = lambda: self.HELP_TEXT
+                    self.MESSAGE_HANDLERS['help'] = lambda: self.HELP_TEXT
             # logger.debug(pprint.pformat(self.MAIN_MENU))
-            # logger.debug(pprint.pformat(self.COMMAND_HANDLERS))
+            # logger.debug(pprint.pformat(self.MESSAGE_HANDLERS))
             # logger.debug(pprint.pformat(self.CALLBACK_HANDLERS))
 
     def get_user_profile(self, user_id):
@@ -234,16 +235,22 @@ class BenderBot():
         #     self.send_elements(recipient, None).json()
         # )
 
+    def set_message_handler(self, handler):
+        pass
+
+    def reset_message_handler(self):
+        pass
+
     def handle_message(self, sender, text):
-        k = fuzzy_find_key(self.COMMAND_HANDLERS, text)
+        k = fuzzy_find_key(self.MESSAGE_HANDLERS, text)
         if k:
-            response = self.COMMAND_HANDLERS[k]()
+            response = self.MESSAGE_HANDLERS[k](sender)
             return self.send_message(sender, response)
         return self.main_menu(sender)
 
     def handle_postback(self, sender, payload):
         if payload in self.CALLBACK_HANDLERS:
-            response = self.CALLBACK_HANDLERS[payload]()
+            response = self.CALLBACK_HANDLERS[payload](sender)
             return self.send_message(sender, response)
         return self.send_message(sender, 'Hu?')
 
