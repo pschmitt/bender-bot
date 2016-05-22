@@ -2,6 +2,10 @@
 # coding: utf-8
 
 import yaml
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def get_config(config_file='bender.yaml'):
     with open(config_file) as f:
@@ -46,5 +50,17 @@ def get_facebook_verification_token(config_file='bender.yaml'):
     return get_facebook_config(config_file)['verification_token']
 
 def get_facebook_authorized_users(config_file='bender.yaml'):
-    return get_facebook_config(config_file)['authorized_users']
+    return [
+        unicode(u) for u in \
+        get_facebook_config(config_file)['authorized_users']
+    ]
+
+def get_facebook_admins(config_file='bender.yaml'):
+    try:
+        return [
+            unicode(u) for u in \
+            get_facebook_config(config_file)['administrators']
+        ]
+    except KeyError:
+        logger.warning('No administrator defined')
 

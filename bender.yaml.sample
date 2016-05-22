@@ -11,6 +11,8 @@ bot:
         verification_token: XXX
         authorized_users:
             - XXX
+        administrators:
+            - XXX
 
 plugins:
     camera:

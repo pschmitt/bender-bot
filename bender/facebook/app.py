@@ -4,6 +4,7 @@
 import falcon
 from .bot import BenderResource
 from ..config import get_facebook_config
+from ..config import get_facebook_admins
 
 
 fb_conf = get_facebook_config()
@@ -36,3 +37,7 @@ main = BenderResource(
 )
 
 app.add_route(endpoint, main)
+
+# Notify admins
+for admin in get_facebook_admins():
+    main.bot.send_message(admin, 'Ready to serve you mylord')
