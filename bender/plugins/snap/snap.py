@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from .foscam import FoscamCamera
+from foscam import FoscamCamera
 from bender.config import get_plugin_config
 from bender.telegram.security import auth_required
 import os
