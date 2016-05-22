@@ -40,4 +40,4 @@ app.add_route(endpoint, main)
 
 # Notify admins
 for admin in get_facebook_admins():
-    main.bot.send_message(admin, 'Ready to serve you mylord')
+    main.bot.send_admin_welcome_message(admin)

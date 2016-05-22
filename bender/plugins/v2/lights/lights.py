@@ -8,7 +8,6 @@ from bender.utils import check_port
 from bender.utils import random_local_port
 from phue import Bridge
 from sshtunnel import SSHTunnelForwarder
-import emoji
 import logging
 
 logger = logging.getLogger()
@@ -47,9 +46,7 @@ def __bridge():
             # return [u'{}: {}'.format(unicode(x.name, 'utf-8'), '💡' if x.on else 'off') for x in b.lights]
             return [
                 '{}: {}'.format(
-                    unicode(x.name, 'utf-8'), \
-                    emoji.emojize(':bulb:', use_aliases=True) if x.on else \
-                    emoji.emojize(':new_moon:', use_aliases=True)
+                    unicode(x.name, 'utf-8'), ':bulb:' if x.on else ':new_moon:'
                 ) for x in b.lights
             ]
             # return ['{}: {}'.format(unicode(x.name, 'utf-8'), ':bulb:' if x.on else 'off') for x in b.lights]

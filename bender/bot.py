@@ -7,6 +7,14 @@ import abc
 class Bot():
     __metaclass__ = abc.ABCMeta
 
+    @abc.abstractproperty
+    def welcome_message(self):
+        pass
+
+    @abc.abstractproperty
+    def admin_welcome_message(self):
+        pass
+
     @abc.abstractmethod
     def handle_message(self, sender, text):
         pass

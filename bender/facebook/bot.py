@@ -12,6 +12,7 @@ import logging
 import pprint
 import requests
 from bender.bot import Bot
+import emoji
 
 
 logging.basicConfig(
@@ -25,6 +26,20 @@ logging.getLogger('urllib3').setLevel(logging.WARNING)
 
 
 class BenderBot(Bot):
+    @property
+    def admin_welcome_message(self):
+       return ':ok_hand: Ready to serve you mylord'
+
+    @property
+    def welcome_message(self):
+        return 'Hi'
+
+    def send_welcome_message(self, recipient):
+        return self.send_message(recipient, self.welcome_message)
+
+    def send_admin_welcome_message(self, recipient):
+        return self.send_message(recipient, self.admin_welcome_message)
+
     def __init__(self, verification_token, page_token, plugins=None):
         self.verification_token = verification_token
         self.page_token = page_token
@@ -100,7 +115,7 @@ class BenderBot(Bot):
                 self.FB_CHAT_API,
                 json={
                     'recipient': {'id': recipient},
-                    'message': {'text': text},
+                    'message': {'text': emoji.emojize(text, use_aliases=True)},
                 },
             )
         # Here we can safely assume that text is a TextResponse instance
