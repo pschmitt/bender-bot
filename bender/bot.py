@@ -20,6 +20,14 @@ class Bot():
         pass
 
     @abc.abstractmethod
+    def set_message_handler(self, sender, text):
+        pass
+
+    @abc.abstractmethod
+    def reset_message_handler(self, sender, text):
+        pass
+
+    @abc.abstractmethod
     def send_text_message(self, recipient, text):
         pass
 

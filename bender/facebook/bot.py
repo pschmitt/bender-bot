@@ -35,10 +35,10 @@ class BenderBot(Bot):
         return 'Hi'
 
     def send_welcome_message(self, recipient):
-        return self.send_message(recipient, self.welcome_message)
+        return self.send_text_message(recipient, self.welcome_message)
 
     def send_admin_welcome_message(self, recipient):
-        return self.send_message(recipient, self.admin_welcome_message)
+        return self.send_text_message(recipient, self.admin_welcome_message)
 
     def __init__(self, verification_token, page_token, plugins=None):
         self.verification_token = verification_token
@@ -86,9 +86,6 @@ class BenderBot(Bot):
                     self.HELP_TEXT += '\r\n'
                     # Register 'help' to display HELP_TEXT
                     self.MESSAGE_HANDLERS['help'] = lambda: self.HELP_TEXT
-            # logger.debug(pprint.pformat(self.MAIN_MENU))
-            # logger.debug(pprint.pformat(self.MESSAGE_HANDLERS))
-            # logger.debug(pprint.pformat(self.CALLBACK_HANDLERS))
 
     def get_user_profile(self, user_id):
         url = 'https://graph.facebook.com/v2.6/{}'.format(user_id)
